@@ -5,8 +5,9 @@ export default styled.div`
     display: flex;
     align-items: center;
     padding-bottom: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     border-bottom: 1px solid var(--gray-300);
+    height: 60px;
   }
 
   header h4 {
@@ -25,15 +26,16 @@ export default styled.div`
   }
 
   .options ul li {
-    background: var(--gradient-03);
+    background: #fff;
     padding: 30px;
     border-radius: 3px;
-    border: 1px solid #dce6f1;
+    border: 1px solid var(--gray-400);
   }
 
   .options ul li:hover {
     transform: scale(1.01, 1.01);
     box-shadow: var(--box-shadow-light);
+    border: 1px solid var(--purple-blue);
     z-index: 10;
     cursor: pointer;
   }

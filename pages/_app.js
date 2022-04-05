@@ -6,6 +6,7 @@ import store from '../lib/store';
 import '../styles/reset.css';
 import '../styles/fonts.css';
 import '../styles/global.css';
+import '../styles/forms.css';
 import '../styles/animations.css';
 
 import StyledApp from './_app.css.js';

@@ -43,7 +43,6 @@ class Vault extends React.Component {
       <StyledVault ref={this.vault}>
         <div className="vault-content">
           <aside>
-            <Link href="/"><img src="/logo.png" alt="Valorem" /></Link>
             <div className="connected-account">
               <div>
                 <header>

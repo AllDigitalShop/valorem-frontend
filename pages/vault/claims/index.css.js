@@ -5,9 +5,9 @@ export default styled.div`
     display: flex;
     align-items: center;
     padding-bottom: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     border-bottom: 1px solid var(--gray-300);
-    height: 40px;
+    height: 60px;
   }
 
   header h4 {

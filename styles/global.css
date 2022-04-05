@@ -48,5 +48,12 @@ strong {
 
 body.is-internal > #__next > div > footer {
   position: static;
-  padding-bottom: 40px;
+  padding: 40px 0;
+}
+
+@media screen and (min-width: 992px) {
+  body.is-internal > #__next > div > footer {
+    position: static;
+    padding: 0 0 40px;
+  }
 }

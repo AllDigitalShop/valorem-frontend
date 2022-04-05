@@ -13,15 +13,6 @@ export default styled.div`
     margin-bottom: 20px;
   }
 
-  aside img {
-    margin: 20px auto 40px;
-    max-width: 175px;
-    width: 175px;
-    display: none;
-    height: auto;
-    cursor: pointer;
-  }
-
   aside .connected-account {
     margin-bottom: 20px;
     padding-bottom: 20px;
