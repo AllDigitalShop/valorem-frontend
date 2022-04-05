@@ -1,0 +1,52 @@
+:root {
+  /* Colors */
+  --white: #ffffff;
+  --muted-purple: #c4b3e2;
+  --cool-gray: #dde3ec;
+  --purple-blue: #3e5dc7;
+  --dark-purple: #151b50;
+
+  /* Grays 👽 */
+  --black: #111f2e;
+  --gray-800: #233747;  
+  --gray-700: #405365;  
+  --gray-600: #768592;  
+  --gray-500: #95a3ad;  
+  --gray-400: #d8dfe2;
+  --gray-300: #f2f2f2;  
+  --gray-200: #f8f8f8;
+
+  /* Gradients */
+  --gradient-01: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(62,93,199,1) 100%);
+  --gradient-02: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(196,179,226,1) 100%);
+  --gradient-03: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(221,227,236,1) 100%);
+
+  /* Shadows */
+  --box-shadow: 0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+  --box-shadow-light: 0 10px 15px -3px rgba(0,0,0,.03),0 4px 6px -4px rgba(0,0,0,.03);
+}
+
+html,
+html > body,
+html > body > #__next,
+html > body > #__next > div {
+  height: 100vh;
+}
+
+body {
+  font-family: "Neue Montreal", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  background: var(--gray-200);
+}
+
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: bold;
+}
+
+body.is-internal > #__next > div > footer {
+  position: static;
+  padding-bottom: 40px;
+}

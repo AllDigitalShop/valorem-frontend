@@ -1,0 +1,48 @@
+Terminology:
+
+# Token
+
+Ethereum tokens are smart contracts that makee use of the Ethereum blockchain. A token can represent a diverse range of digital assets like vouchers, IOUs, or even real-world tangible objects. Token is just a generic name to refer to this group.
+
+# ERC-20 (Standard)
+
+One of the most significant tokens is called ERC-20, which has emerged as the technical standard used for all smart contracts on the Ethereum blockchain for token implementation. Plenty of well-known digital currencies use the ERC-20 standard, including Maker (MKR), Basic Attention Token (BAT), Augur (REP), and the OMG Network (OMG).
+
+ERC-20 has emerged as the technical standard; it is used for all smart contracts on the Ethereum blockchain for token implementation and provides a list of rules that all Ethereum-based tokens must follow.
+
+In terms of implementation coding for ERC-20 tokens, the six basic coding functions are:
+
+- total supply
+- balance of
+- allowance
+- transfer
+- approve
+- transfer from
+
+# Provider
+
+A "wallet provider." For example, MetaMask. The provider "hosts" wallets locally on a user's computer for different types of tokens (e.g., DAI, ETH, etc).
+
+A provider connects to a network (e.g., Ethereum Mainnet) and retrieves balances on that network related to the wallets for each type of token (e.g., DAI Balance, ETH Balance, etc).
+
+# Network
+
+A network is the blockchain being communicated with. E.g., a "testnet" would provide a blockchain used for testing applications while a "mainnet" providers a blockchain for live/production applications.
+
+# Wallet
+
+A wallet contains many addresses of many token types. For e.g., I can have 50 ETH addresses and 2 DAI addresses. In a provider UI (e.g., Metamask), the balances of these addresses are "totaled up" and displayed under the title of the given token.
+
+# Address
+
+An address (a.k.a "account") can send and receive transactions based on its current balance. E.g., the address abc123 can send some or all of its balance to def456. An addresses' balance is the sum of all of its inputs (received), minus its outputs (sent).
+
+
+---
+
+# Wallet Connection
+
+When connecting to MetaMask, whichever wallet was currently "active" or "selected" by the user becomes the signing address once we connect.
+
+// providers get data from smart contract
+// signer is used for signing data/setting data to smart contract
