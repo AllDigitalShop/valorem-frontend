@@ -1,10 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Select from 'react-select';
 import Vault from '../../../../layouts/vault';
-import Address from '../../../../components/address';
-import Select from '../../../../components/select';
+import Amount from '../../../../components/amount';
+import Button from '../../../../components/button';
+import tokens from '../../../../lib/tokens.json';
 
 import StyledNewOption from './index.css.js';
+import TokenSelect from '../../../../components/tokenSelect';
 
 class NewOption extends React.Component {
   state = {};
@@ -22,37 +24,24 @@ class NewOption extends React.Component {
                 <h4>Exercise Asset</h4>
               </header>
               <div className="form-row">
-                <label htmlFor="assetType">Asset Type</label>
-                <Select
-                  placeholder="Select an asset type..."
-                  options={[
-                    { value: 'dai', label: 'DAI', logo: '/dai.svg' },
-                    { value: 'btc', label: 'BTC', logo: '/bitcoin.svg' },
-                    { value: 'eth', label: 'ETH', logo: '/ethereum.svg' },
-                  ]}
-                />
+                <label htmlFor="assetType">Asset</label>
+                <TokenSelect />
               </div>
-              <label htmlFor="exerciseAsset">Exercise Asset Address</label>
-              <Address />
+              <label htmlFor="exerciseAsset">Amount</label>
+              <Amount />
             </div>
             <div className="asset">
               <header>
                 <h4>Underlying Asset</h4>
               </header>
               <div className="form-row">
-                <label htmlFor="assetType">Asset Type</label>
-                <Select
-                  placeholder="Select an asset type..."
-                  options={[
-                    { value: 'dai', label: 'DAI', logo: '/dai.svg' },
-                    { value: 'btc', label: 'BTC', logo: '/bitcoin.svg' },
-                    { value: 'eth', label: 'ETH', logo: '/ethereum.svg' },
-                  ]}
-                />
+                <label htmlFor="assetType">Asset</label>
+                <TokenSelect />
               </div>
-              <label htmlFor="underlyingAsset">Underlying Asset Address</label>
-              <Address />
+              <label htmlFor="underlyingAsset">Amount</label>
+              <Amount />
             </div>
+            <Button theme="purple-blue">Write New Option</Button>
           </form>
         </StyledNewOption>
       </Vault>

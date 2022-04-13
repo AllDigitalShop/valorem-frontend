@@ -4,7 +4,17 @@ export default styled.div`
   position: relative;
 
   .select-input {
+    display: flex;
+    position: relative;
+  }
+
+  .select-input input {
+    height: 57px;
+  }
+  
+  .select-input .selected-option {
     width: 100%;
+    height: 57px;
     display: flex;
     align-items: center;
     border: 1px solid var(--gray-400);
@@ -15,20 +25,23 @@ export default styled.div`
     color: var(--gray-700);
   }
 
-  .select-input img {
+  .selected-option img {
     width: 25px;
     height: auto;
     display: block;
     margin-right: 10px;
   }
 
-  .select-input:hover,
-  .select-input.open {
+  .select-input:hover input,
+  .select-input.open input {
     cursor: pointer;
     border: 1px solid var(--gray-400);
   }
 
   .select-input svg {
+    position: absolute;
+    right: 15px;
+    top: 17px;
     width: 15px;
     height: auto;
     margin-left: auto;
@@ -47,6 +60,8 @@ export default styled.div`
     border: 1px solid var(--gray-400);
     z-index: 9999;
     border-radius: 3px;
+    max-height: 300px;
+    overflow-y: scroll;
   }
 
   .select-options ul li {

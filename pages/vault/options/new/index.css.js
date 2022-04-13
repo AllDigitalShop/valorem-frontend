@@ -37,6 +37,13 @@ export default styled.div`
     color: var(--gray-700);
   }
 
+  form > button {
+    width: 100%;
+    display: block;
+    padding: 20px 40px;
+    font-size: 20px;
+  }
+
   @media screen and (min-width: 992px) {
     > header h4 {
       font-size: 24px;

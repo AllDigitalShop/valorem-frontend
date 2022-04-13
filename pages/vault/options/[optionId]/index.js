@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Vault from '../../../../layouts/vault';
+
+import StyledOption from './index.css.js';
 
 class Option extends React.Component {
   state = {};
 
   render() {
     return (
-      <React.Fragment>
-        <p>Option</p>
-      </React.Fragment>
+      <Vault>
+        <StyledOption>
+          <p>Option</p>
+        </StyledOption>
+      </Vault>
     );
   }
 }

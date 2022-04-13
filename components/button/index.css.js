@@ -41,7 +41,9 @@ export default styled.button`
   }}
 
   &:disabled {
-    opacity: 0.7;
+    opacity: 0.6;
+    pointer-events: none;
+    background: var(--gray-500);
   }
 
   &:active {

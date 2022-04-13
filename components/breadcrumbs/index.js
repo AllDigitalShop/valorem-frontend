@@ -17,8 +17,8 @@ class Breadcrumbs extends React.Component {
       breadcrumbs: pathParts?.map((part, partIndex) => {
         const previousParts = pathParts.slice(0, partIndex);
         return {
-          label: part,
-          href: previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`,
+          label: part?.split('?').shift(),
+          href: previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}`.split('?').shift() : `/${part}`.split('?').shift(),
         };
       }),
     });
@@ -26,6 +26,8 @@ class Breadcrumbs extends React.Component {
 
   render() {
     const { path, breadcrumbs } = this.state;
+
+    console.log(breadcrumbs);
 
     return (
       <StyledBreadcrumbs>

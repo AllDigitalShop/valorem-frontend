@@ -1,18 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import Fuse from 'fuse.js';
 import AngleDown from '../icons/AngleDown';
-import delay from '../../lib/delay';
 
 import StyledSelect from './index.css.js';
 
 class Select extends React.Component {
-  state = {
-    value: '',
-    showDropdown: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+      search: '',
+      searchResults: [],
+      showDropdown: false,
+    };
+
+    this.searchInput = React.createRef();    
+  }
+
+  componentDidMount() {
+    const { options } = this.props;
+    this.searchIndex = new Fuse(options, {
+      threshold: 0.1,
+      keys: ["label"],
+    }); 
+  }
+
+  handleSearch = (search = '') => {
+    const searchResults = this.searchIndex.search(search);
+    this.setState({ search, searching: true, searchResults, showDropdown: true });
   };
 
   handleSelectOption = (option) => {
-    this.setState({ value: option, showDropdown: false });
+    this.setState({ value: option, searching: false, showDropdown: false });
   };
 
   getSelectedOption = () => {
@@ -21,36 +42,49 @@ class Select extends React.Component {
     return options?.find((option) => option.value === value);
   };
 
-  handleToggleSelect = (event) => {
-    delay(() => {
-      this.setState(({ showDropdown }) => {
-        return {
-          showDropdown: !showDropdown,
-        };
-      });
-    }, 200);
+  handleToggleSelect = () => {
+    this.setState({
+      showDropdown: true,
+      search: '',
+      value: '',
+      selectedOption: null,
+      searchResults: []
+    }, () => {
+      if (this.state.searching && this.searchInput.current) {
+        setTimeout(() => this.searchInput.current.focus(), 300);
+      }
+    });
   };
 
   render() {
     const { options, placeholder } = this.props;
-    const { showDropdown } = this.state;
+    const { searching, searchResults, showDropdown } = this.state;
     const selectedOption = this.getSelectedOption();
+    const optionsToRender = searchResults?.length > 0 ? searchResults?.map(({ item }) => item) : options;
 
     return (
       <StyledSelect>
         <div
           tabIndex="0"
           className={`select-input ${showDropdown ? 'open' : ''}`}
-          onFocus={this.handleToggleSelect}
           onClick={this.handleToggleSelect}
         >
-          {selectedOption?.logo && <img src={selectedOption.logo} alt={selectedOption.label} />}
-          {selectedOption?.label || placeholder || 'Select an option...'}
+          {(searching || !selectedOption) && (
+            <input
+              ref={this.searchInput}
+              placeholder={placeholder || 'Select an option...'}
+              onChange={(event) => this.handleSearch(event?.target?.value)}
+            />
+          )}
+          {!searching && selectedOption && (<div className="selected-option">
+            <img src={selectedOption.logo} alt={selectedOption.label} />
+            {selectedOption.label}
+          </div>)}
           <AngleDown />
         </div>
-        {options?.length > 0 && showDropdown && (<div className="select-options">
+        {showDropdown && optionsToRender?.length > 0 && (<div className="select-options">
           <ul>
-            {options?.map((option) => {
+            {_.sortBy(optionsToRender, 'label')?.map((option) => {
               return (
                 <li
                   tabIndex="0"
