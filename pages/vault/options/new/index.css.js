@@ -44,6 +44,20 @@ export default styled.div`
     font-size: 20px;
   }
 
+  .low-balance-warning {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    font-size: 15px;
+    line-height: 23px;
+    border-radius: 5px;
+    background: #c73e7a;
+    color: #fff;
+    text-align: center;
+  }
+
   @media screen and (min-width: 992px) {
     > header h4 {
       font-size: 24px;

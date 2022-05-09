@@ -27,8 +27,6 @@ class Breadcrumbs extends React.Component {
   render() {
     const { path, breadcrumbs } = this.state;
 
-    console.log(breadcrumbs);
-
     return (
       <StyledBreadcrumbs>
         {breadcrumbs?.length > 0 && (

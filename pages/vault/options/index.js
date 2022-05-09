@@ -43,6 +43,7 @@ class Options extends React.Component {
             <div className="tabs">
               <ul>
                 <li className={list === 'active' ? `active` : ''} onClick={() => this.setState({ list: 'active' })}>Active</li>
+                <li className={list === 'pending' ? `pending` : ''} onClick={() => this.setState({ list: 'pending' })}>Pending</li>
                 <li className={list === 'expired' ? `active` : ''} onClick={() => this.setState({ list: 'expired' })}>Expired</li>
               </ul>
             </div>
@@ -82,6 +83,39 @@ class Options extends React.Component {
                   );
                 })}
               </ul>)}
+              {list === 'pending' && (
+                <ul>
+                  <li key={`item-${itemIndex}`} className="option">
+                    <div className="option-row">
+                      <div className="option-datapoint">
+                        <h5>Contracts</h5>
+                        <h4>100</h4>
+                      </div>
+                    </div>
+                    <div className="option-row">
+                      <div className="option-datapoint">
+                        <h5>Exercise From</h5>
+                        <h4>Aug 22nd, 2022</h4>
+                      </div>
+                      <div className="option-datapoint">
+                        <h5>Expiration Date</h5>
+                        <h4>Aug 23rd, 2022</h4>
+                      </div>
+                    </div>
+                    <div className="option-row">
+                      <div className="option-datapoint">
+                        <h5>Underlying Asset</h5>
+                        <h4>1 ETH <span>(x 100)</span></h4>
+                      </div>
+                      <div className="option-datapoint">
+                        <h5>Exercise Asset</h5>
+                        <h4>3000 DAI <span>(x 100)</span></h4>
+                      </div>
+                    </div>
+                    <Button theme="purple-blue">View Option</Button>
+                  </li>
+                </ul>
+              )}
               {list === 'expired' && (<ul>
                 {[...(new Array(10))].map((item, itemIndex) => {
                   return (

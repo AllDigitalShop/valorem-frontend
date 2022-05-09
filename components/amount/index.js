@@ -7,11 +7,20 @@ class Amount extends React.Component {
   state = {};
 
   render() {
-    const { id } = this.props;
+    const { id, label, paddingLeft, min, value, onChange, ...props } = this.props;
     return (
-      <StyledAmount>
-        <div className="address-cap">Amount</div>
-        <input type="text" id={id} name="amount" placeholder="1000" />
+      <StyledAmount paddingLeft={paddingLeft}>
+        <div className="input-cap">{label}</div>
+        <input
+          {...props}
+          type="number"
+          id={id}
+          min={0}
+          value={value}
+          onChange={onChange}
+          name="amount"
+          placeholder="100"
+        />
       </StyledAmount>
     );
   }

@@ -21,7 +21,23 @@ form input:focus {
   box-shadow: inset 0px 1px 1px 1px rgba(62, 93, 199, 0.1);
 }
 
+input {
+  color: var(--gray-700);
+}
+
 .form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-row .form-input-group:not(:last-child) {
   margin-bottom: 20px;
 }
 
@@ -39,4 +55,18 @@ form input:focus {
 
 :-moz-placeholder { /* Firefox 18- */
   color: var(--gray-400);
+}
+
+@media screen and (min-width: 1200px) {
+  .form-row {
+    flex-direction: row; 
+  }
+
+  .form-row .form-input-group {
+    margin-bottom: 0px !important;
+  }
+
+  .form-row .form-input-group:not(:first-child) {
+    margin-left: 20px;
+  }
 }

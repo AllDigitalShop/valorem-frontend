@@ -32,8 +32,11 @@ class Select extends React.Component {
     this.setState({ search, searching: true, searchResults, showDropdown: true });
   };
 
-  handleSelectOption = (option) => {
-    this.setState({ value: option, searching: false, showDropdown: false });
+  handleSelectOption = (option, label) => {
+    const { onChange } = this.props;
+    this.setState({ value: option, searching: false, showDropdown: false }, () => {
+      onChange(option, label);
+    });
   };
 
   getSelectedOption = () => {
@@ -57,7 +60,7 @@ class Select extends React.Component {
   };
 
   render() {
-    const { options, placeholder } = this.props;
+    const { options, placeholder, value, onChange } = this.props;
     const { searching, searchResults, showDropdown } = this.state;
     const selectedOption = this.getSelectedOption();
     const optionsToRender = searchResults?.length > 0 ? searchResults?.map(({ item }) => item) : options;
@@ -77,7 +80,8 @@ class Select extends React.Component {
             />
           )}
           {!searching && selectedOption && (<div className="selected-option">
-            <img src={selectedOption.logo} alt={selectedOption.label} />
+            { /* NOTE: Disabling logos as the data is inconsistent and many return 404s. */ }
+            { /* <img src={selectedOption.logo} alt={selectedOption.label} /> */ }
             {selectedOption.label}
           </div>)}
           <AngleDown />
@@ -91,10 +95,10 @@ class Select extends React.Component {
                   key={option.value}
                   onKeyDown={(event) => {
                     if (event.keyCode === 13) {
-                      this.handleSelectOption(option.value);
+                      this.handleSelectOption(option.value, option.label);
                     }
                   }}
-                  onClick={() => this.handleSelectOption(option.value)}
+                  onClick={() => this.handleSelectOption(option.value, option.label)}
                 >
                   {option?.logo && <img src={option.logo} alt={option.label} />} {option.label}
                 </li>

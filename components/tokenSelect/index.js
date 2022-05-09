@@ -7,13 +7,20 @@ class TokenSelect extends React.Component {
   state = {};
 
   render() {
+    const { value, onChange } = this.props;
+    const tokensForEnvironment = tokens && tokens[process.env.NODE_ENV];
+
     return (
       <React.Fragment>
         <Select
           search
           placeholder="Select a token..."
-          options={tokens?.map(({ address, name, symbol, logoURI }) => {
-            return { value: address, label: `${symbol} - ${name}`, logo: logoURI }
+          value={value}
+          onChange={onChange}
+          options={tokensForEnvironment?.map(({ address, name, symbol, logoURI }) => {
+            // NOTE: Removed logoURI as the data is inconsistent and a lot of links in the token
+            // list just return 404s.
+            return { value: address, label: `${symbol} - ${name}` }
           })}
         />
       </React.Fragment>

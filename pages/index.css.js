@@ -9,6 +9,20 @@ export default styled.div`
   text-align: center;
   padding: 40px;
 
+  .wallet-error {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 40px auto 0;
+    padding: 20px;
+    font-size: 15px;
+    line-height: 23px;
+    border-radius: 5px;
+    background: #c73e7a;
+    color: #fff;
+    text-align: center;
+  }
+
   &.fade-out {
     animation: fade-shrink 1s 1;
     opacity: 0;

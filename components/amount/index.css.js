@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export default styled.div`
   position: relative;
 
-  .address-cap {
+  .input-cap {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -19,6 +19,6 @@ export default styled.div`
   }
 
   input {
-    padding-left: 110px;
+    padding-left: ${(props) => props?.paddingLeft ? `${props.paddingLeft}` : '100px'};
   }
 `;

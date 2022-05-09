@@ -18,7 +18,7 @@ class Claims extends React.Component {
           </header>
           <div className="claims">
             <div className="responsive-table">
-              <table>
+              <table className="table">
                 <thead>
                   <tr>
                     <th className="text-center">Option</th>

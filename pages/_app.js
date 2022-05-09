@@ -1,7 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
+import Router from 'next/router';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from '../lib/store';
+
+import "react-datetime/css/react-datetime.css";
 
 import '../styles/reset.css';
 import '../styles/fonts.css';
@@ -15,6 +18,14 @@ import StyledApp from './_app.css.js';
 
 class App extends React.Component {
   state = {};
+
+  componentDidMount() {
+    const state = store.getState();
+
+    if (!state.wallet) {
+      Router.push('/');
+    }
+  }
 
   year = () => {
     const currentYear = new Date().getFullYear();

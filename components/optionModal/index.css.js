@@ -65,11 +65,15 @@ export default styled.div`
     padding: 15px 20px;
   }
 
+  .approve {
+    margin-bottom: 20px;
+  }
+
   .warning {
     padding: 20px;
     background: var(--gray-300);
     border-radius: 5px;
-    margin-top: 20px;
+    margin: 0px 0px 20px;
   }
 
   .warning .top {
@@ -83,8 +87,12 @@ export default styled.div`
     margin-right: 20px;
   }
 
-  .warning .top p {
+  .warning .top p strong {
     color: var(--gray-700);
+  }
+
+  .warning .top p {
+    color: var(--gray-600);
     font-size: 15px;
     line-height: 22px;
   }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '../button';
 
 import StyledOptionModal, { OptionModalBackdrop } from './index.css.js';
+import Warning from '../warning';
 
 class OptionModal extends React.Component {
   state = {};
@@ -42,8 +43,11 @@ class OptionModal extends React.Component {
               </div>
             </div>
             <footer>
-              { /* <Button disabled theme="purple-blue">Exercise Option</Button> */ }
-              <Button theme="purple-blue">Approve ETH to Exercise</Button>
+              <Warning center>
+                <p><strong>👉</strong> Valorem charges a 0.05% fee in order to exercise this option.</p>
+              </Warning>
+              <Button className="approve" theme="purple-blue">Approve ETH</Button>
+              <Button disabled theme="purple-blue">Exercise Option</Button>
             </footer>
           </StyledOptionModal>
         </OptionModalBackdrop>

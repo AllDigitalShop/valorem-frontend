@@ -48,6 +48,32 @@ strong {
   font-weight: bold;
 }
 
+.rdtPicker td.rdtActive,
+.rdtPicker td.rdtActive:hover {
+  background: var(--purple-blue);
+}
+
+.rdtPicker td.rdtToday:before {
+  border-bottom: 7px solid var(--purple-blue);
+}
+
+.rdtPicker {
+  padding: 15px;
+  border-radius: 3px;
+}
+
+.rdtPicker table {
+  border: none !important;
+}
+
+.rdtPicker table thead tr th {
+  border: none !important;
+}
+
+.rdtPicker table tbody tr:first-child td {
+  border-top: none;
+}
+
 body.is-internal > #__next > div > footer {
   position: static;
   padding: 40px 0;

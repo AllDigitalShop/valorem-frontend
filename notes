@@ -46,3 +46,10 @@ When connecting to MetaMask, whichever wallet was currently "active" or "selecte
 
 // providers get data from smart contract
 // signer is used for signing data/setting data to smart contract
+
+---------
+
+Implementation
+
+- When connecting a wallet, if not on the correct network, throw an error and don't allow wallet to connect until fixed.
+- When creating provider 
