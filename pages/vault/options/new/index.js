@@ -2,21 +2,25 @@ import React from 'react';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import { ethers } from 'ethers';
+import Web3 from 'web3';
 import Vault from '../../../../layouts/vault';
 import Amount from '../../../../components/amount';
 import Button from '../../../../components/button';
 import Warning from '../../../../components/warning';
 import TokenSelect from '../../../../components/tokenSelect';
+import OptionModal from '../../../../components/optionModal';
 import store from '../../../../lib/store';
 
 import StyledNewOption from './index.css.js';
-import contractABI from '../../../../lib/contractABI';
+
+const web3 = new Web3();
+const MAX_APPROVAL = '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
 class NewOption extends React.Component {
   state = {
     numberOfContracts: 0,
-    exerciseFromDate: '',
-    expirationDate: '',
+    exerciseTimestamp: '',
+    expiryTimestamp: '',
     exerciseAsset: '',
     exerciseAmount: 0,
     underlyingAsset: '',
@@ -24,16 +28,92 @@ class NewOption extends React.Component {
     underlyingAmount: 0,
     lowBalanceWarning: null,
     writingOption: false,
+    needsApproval: false,
+  };
+
+  handleWrite = (contract = {}, optionId = '', numberOfContracts = 0) => {
+    console.log({
+      contract,
+      optionId,
+      numberOfContracts,
+    })
+
+    contract.write(optionId, numberOfContracts).then((response) => {
+      contract.on('OptionsWritten', (optionId, writer, claimId, amount) => {
+        // TODO: Confirm or redirect?
+        console.log('OptionsWritten', {
+          optionId,
+          writer,
+          claimId,
+          amount,
+        });
+      });
+    });
+  };
+
+  handleWriteContract = async () => {
+    const hasAllowance = await this.checkIfHasAllowance(this.state?.underlyingAsset, this.connection?.optionsSettlementEngineAddress);
+
+    console.log({hasAllowance});
+
+    if (hasAllowance) {
+      this.handleWrite(
+        this.contractWithSigner,
+        this?.optionId?.toNumber(),
+        ethers.BigNumber.from(this.state.numberOfContracts)
+      );
+    } else {
+      this.setState({ needsApproval: true });
+    }
+  };
+
+  handleApproveToken = async (underlyingAsset = '', underlyingAmount = 0, numberOfContracts = 0, callback = null) => {
+    const state = store.getState();
+    const erc20 = state?.wallet?.connection?.erc20;
+    const optionsSettlementEngineAddress = state?.wallet?.connection?.optionsSettlementEngineAddress;
+    const erc20Instance = erc20(underlyingAsset);
+    const erc20InstanceWithSigner = erc20Instance ? erc20Instance.connect(this.connection.signer) : null;
+    const approvalTransaction = await erc20InstanceWithSigner.approve(
+      optionsSettlementEngineAddress,
+      // NOTE: Parse Ether to WEI before performing approval.
+      MAX_APPROVAL
+      // ethers.utils.parseEther(`${underlyingAmount * numberOfContracts}`)
+    );
+
+    return approvalTransaction.wait().then((approvalResponse) => {
+      console.log({approvalResponse});
+      this.setState({ needsApproval: false }, callback);
+    });
+  };
+
+  checkIfHasAllowance = async (underlyingAsset = '', optionsSettlementEngineAddress = '') => {
+    const state = store.getState();
+    const erc20 = state?.wallet?.connection?.erc20;
+    const erc20Instance = erc20(underlyingAsset);
+    const allowanceResponse = await erc20Instance.allowance(state?.wallet?.connection?.accounts[0], optionsSettlementEngineAddress);
+
+    if (allowanceResponse?._hex === '0x00') {
+      return false;
+    }
+
+    return true;
   };
 
   checkIfHasRequiredBalance = async (underlyingAsset = '', underlyingAmountInEther = 0, numberOfContracts = 0) => {
     const state = store.getState();
-    // NOTE: This number is returned in WEI.
-    const underlyingAssetBalanceAsBigNumber = await state?.wallet?.connection?.ethers?.getBalance(underlyingAsset);
+    const erc20 = state?.wallet?.connection?.erc20;
+    const erc20Instance = erc20(underlyingAsset);
+    const underlyingAssetBalanceAsBigNumber = await erc20Instance.balanceOf(state?.wallet?.connection?.accounts[0]);
     const underlyingAssetBalanceAsEther = ethers.utils.formatEther(underlyingAssetBalanceAsBigNumber);
     const totalUnderlyingAmount = underlyingAmountInEther * numberOfContracts;
 
-    if (underlyingAssetBalanceAsEther > totalUnderlyingAmount) {
+    console.log({
+      underlyingAssetBalanceAsBigNumber,
+      underlyingAssetBalanceAsEther,
+      totalUnderlyingAmount,
+    });
+
+    if (underlyingAssetBalanceAsBigNumber > totalUnderlyingAmount) {
       return true;
     }
     
@@ -48,106 +128,163 @@ class NewOption extends React.Component {
     }
   };
 
-  handleGetChainHash = (chain = {}) => {
-    return ethers.utils.keccak256(
-      ethers.utils.defaultAbiCoder.encode([
-        'address',
-        'uint40',
-        'uint40',
-        'address',
-        'uint96',
-        'uint160',
-        'uint96',
-      ], Object.values(chain))
-    );
+  handleGetChainHash = (contractWithSigner = {}, chain = {}) => {
+    // const encodings = {
+    //   web3abi: web3.eth.abi.encodeParameters(
+    //     ['address', 'uint40', 'uint40', 'address', 'uint96', 'uint160', 'uint96'],
+    //     Object.values(chain)
+    //   ),
+    //   ethersabi: ethers.utils.defaultAbiCoder.encode([
+    //     'address',
+    //     'uint40',
+    //     'uint40',
+    //     'address',
+    //     'uint96',
+    //     'uint160',
+    //     'uint96',
+    //   ], Object.values(chain))
+    // };
+
+    // const hashes = {
+    //   web3Hash: web3.utils.sha3(
+    //     web3.eth.abi.encodeParameters(
+    //       ['address', 'uint40', 'uint40', 'address', 'uint96', 'uint160', 'uint96'],
+    //       Object.values(chain)
+    //     ),
+    //   ),
+    //   ethersKeccak256: ethers.utils.keccak256(
+    //     ethers.utils.defaultAbiCoder.encode([
+    //       'address',
+    //       'uint40',
+    //       'uint40',
+    //       'address',
+    //       'uint96',
+    //       'uint160',
+    //       'uint96',
+    //     ], Object.values(chain))
+    //   ),
+    //   ethersSHA256: ethers.utils.sha256(
+    //     ethers.utils.defaultAbiCoder.encode([
+    //       'address',
+    //       'uint40',
+    //       'uint40',
+    //       'address',
+    //       'uint96',
+    //       'uint160',
+    //       'uint96',
+    //     ], Object.values(chain))
+    //   ),
+    //   solidityKeccak256: ethers.utils.solidityKeccak256([
+    //     'address',
+    //     'uint40',
+    //     'uint40',
+    //     'address',
+    //     'uint96',
+    //     'uint160',
+    //     'uint96',
+    //   ], Object.values(chain)),
+    // };
+
+    // return Promise.all(Object.entries(hashes).map(async ([hashName, hashValue]) => {
+    //   return {
+    //     hashName,
+    //     hashValue,
+    //     encodings,
+    //     result: await this.handleVerifyHash(contractWithSigner, hashValue),
+    //   };
+    // }));
+
+    const values = Object.values(chain);
+    const valuesWithTypes = [
+      'address',
+      'uint40',
+      'uint40',
+      'address',
+      'uint96',
+      'uint160',
+      'uint96',
+    ].map((type, index) => {
+      return { t: type, v: values[index] };
+    });
+
+    return web3.utils.soliditySha3(...valuesWithTypes);
   };
 
   handleGetChainToCreate = () => {
     return {
       underlyingAsset: this.state.underlyingAsset,
-      exerciseTimestamp: ethers.BigNumber.from(moment(this.state.exerciseFromDate).unix()),
-      expiryTimestamp: ethers.BigNumber.from(moment(this.state.expirationDate).unix()),
+      exerciseTimestamp: ethers.BigNumber.from(moment(this.state.exerciseTimestamp).unix()),
+      expiryTimestamp: ethers.BigNumber.from(moment(this.state.expiryTimestamp).unix()),
       exerciseAsset: this.state.exerciseAsset,
-      exerciseAmount: ethers.BigNumber.from(this?.state?.exerciseAmount),
+      exerciseAmount: ethers.utils.parseUnits(this?.state?.exerciseAmount),
       settlementSeed: ethers.BigNumber.from(0),
-      underlyingAmount: ethers.BigNumber.from(this?.state?.underlyingAmount),
+      underlyingAmount: ethers.utils.parseUnits(this?.state?.underlyingAmount),
     };
+  };
+
+  handleGetConnection = () => {
+    const state = store.getState();
+    const connection = state?.wallet?.connection;
+    return connection;
   };
 
   handleWriteNewOption = async (event) => {
     event.preventDefault();
 
-    this.setState({ lowBalanceWarning: null }, async () => {
-      const chain = this.handleGetChainToCreate();
+    this.setState({ writingOption: true, lowBalanceWarning: null }, async () => {
+      this.connection = this.handleGetConnection();
+
+      const contract = this.connection?.contract;
+      const signer = this.connection?.signer;
+
+      this.contractWithSigner = contract ? contract.connect(signer) : null;
+      this.chain = this.handleGetChainToCreate();
+
       const hasRequiredBalance = await this.checkIfHasRequiredBalance(
-        chain.underlyingAsset,
-        chain.underlyingAmount,
+        this.chain.underlyingAsset,
+        this.chain.underlyingAmount,
         this.state.numberOfContracts,
       );
   
       if (!hasRequiredBalance) {
-        const totalAmountRequiredInEther = chain.underlyingAmount * this.state.numberOfContracts;
-        this.setState({ lowBalanceWarning: `Sorry, you don't have enough ${this.state.underlyingAssetName} (${totalAmountRequiredInEther}) to write this option.` });
+        const totalAmountRequiredInEther = this.chain?.underlyingAmount * this.state.numberOfContracts;
+        this.setState({ writingOption: false, lowBalanceWarning: `Sorry, you don't have enough of this token to write this option.` });
         return;
       }
 
+      console.log({
+        hasRequiredBalance,
+      });
+
       // NOTE: If balance requirements are met, parse Ether to WEI before handing to contract.
-      chain.exerciseAmount = ethers.utils.parseEther(this?.state?.exerciseAmount);
-      chain.underlyingAmount = ethers.utils.parseEther(this?.state?.underlyingAmount);
+      this.chain.exerciseAmount = ethers.utils.parseEther(this?.state?.exerciseAmount);
+      this.chain.underlyingAmount = ethers.utils.parseEther(this?.state?.underlyingAmount);
 
-      const state = store.getState();
-      const contract = state?.wallet?.connection?.contract;
-      const signer = state?.wallet?.connection?.signer;
-      const contractWithSigner = contract ? contract.connect(signer) : null;
-      const chainHash = this.handleGetChainHash(chain);
-      const hashToOptionTokenResponse = chainHash ? await this.handleVerifyHash(contractWithSigner, chainHash) : false;
-      console.log(hashToOptionTokenResponse);
-      const exists = hashToOptionTokenResponse?._hex !== '0x00';
-
-      // this.setState({ writingOption: true }, () => {
-
-      // });
-      // if (exists) {
-      //   console.log(exists);
-      //   // TODO: Skip to writing.
-      //   console.log('EXISTS WRITE');
-      //   this.handleWrite
-      // } else {
-      //   if (contractWithSigner) {
-      //     // Check if option exists via hashToOption function. 
-      //     contractWithSigner.newChain(chain).then(async () => {
-      //       contractWithSigner.on('NewChain', (chainId) => {
-      //         console.log('CHAIN ID', chainId, chainId?.toBigInt(), chainId?.toNumber());
-      //         this.write
-      //       });
-      //     }).catch((error) => {
-      //       console.dir(error);
-      //     });
-      //   }
-      // }
-  
-      // // https://docs.ethers.io/v5/api/utils/display-logic/#utils-formatUnits
-      // // TODO: Show value inputs as being in ETHER not WEI, BUT convert ETHER to WEI when creating chain object above. 
-      // // TODO: Validate balances exist for underlyingAsset (WEI * Contract count exists in wallet for asset type).
-      // // TODO: 
-      // // TODO: Hash above w/ keccak256(abi.encode(Option memory)) and verify the hash doesn't already exist. https://docs.ethers.io/v5/api/utils/hashing/ 
-      // // TODO: Toss hash to function hashToOptionToken(bytes32 hash) to verify existence (if it returns 0 doesn't exist).
-      // // TODO: If it DOES exist, skip to writing, otherwise, .newChain() and wait for tx.
-  
-
+      this.setState({ writingOption: true }, () => {
+        this.contractWithSigner.newChain(this.chain).then(async (response) => {
+          this.contractWithSigner.on('NewChain', async (optionId) => {
+            this.optionId = optionId;
+            this.handleWriteContract();
+          });
+        }).catch((error) => {
+          console.dir(error);
+        });
+      });
     });
   };
 
   render() {
     const {
       numberOfContracts,
-      exerciseFromDate,
-      expirationDate,
+      exerciseTimestamp,
+      expiryTimestamp,
       exerciseAsset,
       exerciseAmount,
       underlyingAsset,
       underlyingAmount,
       lowBalanceWarning,
+      needsApproval,
+      writingOption,
     } = this.state;
 
     return (
@@ -156,7 +293,7 @@ class NewOption extends React.Component {
           <header>
             <h4>Write New Option</h4>
           </header>
-          <form onSubmit={this.handleWriteNewOption}>
+          <form disabled={writingOption} onSubmit={this.handleWriteNewOption}>
             <div className="contract-options">
               <div className="form-row">
                 <div className="form-input-group">
@@ -171,24 +308,24 @@ class NewOption extends React.Component {
                   />
                 </div>
                 <div className="form-input-group">
-                  <label htmlFor="exerciseFromDate">Exercise From Date</label>
+                  <label htmlFor="exerciseTimestamp">Exercise From Date</label>
                   <DateTime
                     timeFormat={false}
-                    value={moment(exerciseFromDate)}
+                    value={moment(exerciseTimestamp)}
                     onChange={(date) => {
                       // NOTE: date is a moment() object, here format it as an ISO-8601 string.
-                      this.setState({ exerciseFromDate: date.format() });
+                      this.setState({ exerciseTimestamp: date.format() });
                     }}
                   />
                 </div>
                 <div className="form-input-group">
-                  <label htmlFor="expirationDate">Expiration Date</label>
+                  <label htmlFor="expiryTimestamp">Expiration Date</label>
                   <DateTime
                     timeFormat={false}
-                    value={moment(expirationDate)}
+                    value={moment(expiryTimestamp)}
                     onChange={(date) => {
                       // NOTE: date is a moment() object, here format it as an ISO-8601 string.
-                      this.setState({ expirationDate: date.format() });
+                      this.setState({ expiryTimestamp: date.format() });
                     }}
                   />
                 </div>
@@ -254,9 +391,31 @@ class NewOption extends React.Component {
             {lowBalanceWarning && (
               <p className="low-balance-warning">{lowBalanceWarning}</p>
             )}
-            <Button type="submit" theme="purple-blue">Write New Option</Button>
+            <Button disabled={writingOption} type="submit" theme="purple-blue">
+              {writingOption ? 'Writing option...' : 'Write New Option'}
+            </Button>
           </form>
         </StyledNewOption>
+        <OptionModal
+          hide={false}
+          open={!!needsApproval}
+          needsApproval={needsApproval}
+          option={{
+            numberOfContracts,
+            exerciseTimestamp,
+            expiryTimestamp,
+            underlyingAsset,
+            underlyingAmount,
+            exerciseAmount,
+            exerciseAsset,
+            needsApproval,
+          }}
+          onApprove={() => {
+            this.handleApproveToken(underlyingAsset, underlyingAmount, numberOfContracts, () => {
+              this.handleWriteContract();
+            });
+          }}
+        />
       </Vault>
     );
   }

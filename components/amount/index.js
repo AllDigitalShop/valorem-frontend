@@ -15,7 +15,6 @@ class Amount extends React.Component {
           {...props}
           type="number"
           id={id}
-          min={0}
           value={value}
           onChange={onChange}
           name="amount"

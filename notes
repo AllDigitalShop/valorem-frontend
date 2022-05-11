@@ -53,3 +53,17 @@ Implementation
 
 - When connecting a wallet, if not on the correct network, throw an error and don't allow wallet to connect until fixed.
 - When creating provider 
+
+
+1. Check for required balance of underlyingAsset.
+   X 1A. If balance met, continue.
+   X 1B. If balance NOT met, throw an error.
+2. Create and verify existence of hash of chain to create.
+   1A. If chain hash already exists, skip to check allowance.
+   1B. If chain hash doesn't exist, create it, then move to check allowance.
+3. Check the allowance for the asset.
+   1A. If it exists, skip to write().
+   1B. If it doesn't exist, pop up request for approval.
+   1C. After approval, skip to write contract.
+4. Write the contract(s).
+   

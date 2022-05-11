@@ -112,6 +112,7 @@ export default styled.div`
     background: #fff;
     border-radius: 3px;
     padding: 20px;
+    position: relative;
   }
 
   @media screen and (min-width: 992px) {

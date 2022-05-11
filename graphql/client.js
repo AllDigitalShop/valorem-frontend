@@ -1,8 +1,7 @@
-import { ApolloClient } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import settings from '../next.config';
 
-export default () => {
-  return new ApolloClient({
-    uri: process.env?.subgraph?.uri,
-    cache: new InMemoryCache()
-  });
-};
+export default new ApolloClient({
+  uri: settings.env?.subgraph?.uri,
+  cache: new InMemoryCache()
+});

@@ -1,15 +1,18 @@
 import gql from 'graphql-tag';
 
-export default {
-  claims: gql`
-    query claims($where: Claim_filter) {
-      options {
-        id
-        option
-        amountWritten
-        amountExercised
-        claimed
-      }
+export const claims = gql`
+  query claims($where: Claim_filter) {
+    claims(where: $where) {
+      id
+      option
+      amountWritten
+      amountExercised
+      claimed
+      redeemer
+      exerciseAsset
+      underlyingAsset
+      exerciseAmount
+      underlyingAmount
     }
-  `,
-};
+  }
+`;

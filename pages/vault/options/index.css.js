@@ -178,7 +178,7 @@ export default styled.div`
 
   @media screen and (min-width: 1450px) {
     .options ul li .option-row h4 {
-      font-size: 24px;
+      font-size: 22px;
     }
   }
 `;
