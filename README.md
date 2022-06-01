@@ -8,7 +8,7 @@
 
 ## Getting Started
 
-In order to run the app in development, the `npm start` command is best. This runs the Next.js development server for the app. From your terminal at the root of the project:
+In order to run the app in development, the `npm run dev` command is best. This runs the Next.js development server for the app. From your terminal at the root of the project:
 
 ```javascript
 npm start
