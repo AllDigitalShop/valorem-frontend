@@ -58,8 +58,8 @@ class Claims extends React.Component {
           {loading && <Loader />}
           {!loading && claims?.length === 0 && (
             <BlankState
-              title="No claims yet."
-              subtitle="Once you submit an option claim, it will show here."
+              title="No claims found."
+              subtitle="Once you hold claims NFTs, they will show here."
             />
           )}
           {!loading && claims?.length > 0 && (
