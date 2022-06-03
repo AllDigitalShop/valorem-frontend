@@ -287,6 +287,9 @@ class NewOption extends React.Component {
       writingOption,
     } = this.state;
 
+    // TODO(This should ideally present the user with a few common asset/strike/expiry/exercise to write)
+    // Will help liquidity fragmentation, and this present screen will be a "custom" option
+    // Out of scope for MVP.
     return (
       <Vault>
         <StyledNewOption>
@@ -349,7 +352,7 @@ class NewOption extends React.Component {
               <div className="form-input-group">
                 <label htmlFor="exerciseAmount">Amount</label>
                 <Amount
-                  label="ETHER"
+                  label="Ether"
                   paddingLeft="108px"
                   value={exerciseAmount}
                   onChange={(event) => {
@@ -376,7 +379,7 @@ class NewOption extends React.Component {
               <div className="form-input-group">
                 <label htmlFor="underlyingAmount">Amount</label>
                 <Amount
-                  label="ETHER"
+                  label="Ether"
                   paddingLeft="108px"
                   value={underlyingAmount}
                   onChange={(event) => {

@@ -79,7 +79,7 @@ class Index extends React.Component {
           {connectingWallet ? 'Connecting...' : 'Connect Wallet'}
         </Button>
         {walletError && <p className="wallet-error"><strong>Error:</strong> {walletError}</p>}
-        <p>Connected wallet data is <em>only</em> stored in your browser—Valorem does not store this information.</p>
+        <p>Connected wallet data is <em>only</em> stored in your browser — Valorem does not store this information.</p>
       </StyledIndex>
     );
   }

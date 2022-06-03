@@ -49,7 +49,7 @@ class App extends React.Component {
           <Component {...pageProps} />
         </ReduxProvider>
         <footer>
-          <p>&copy; {this.year()}, Alcibiades Capital LLC. All rights reserved.</p>
+          <p>&copy; {this.year()}, Valorem Labs Inc. All rights reserved.</p>
         </footer>
       </StyledApp>
     );

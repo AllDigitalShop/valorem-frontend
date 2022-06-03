@@ -45,23 +45,21 @@ class Options extends React.Component {
       const query = {
         active: {
           query: activeOptionsQuery,
-          skip: !state?.wallet?.connection?.accounts[0],
+          skip: !state?.wallet?.connection?.accounts[1],
           variables: {
             where: {
-              writer: state?.wallet?.connection?.accounts[0],
+              creator: state?.wallet?.connection?.accounts[1],
               expiryTimestamp_gt: moment().unix(),
-              amount_gt: 0,
             },
           },
         },
         expired: {
           query: expiredOptionsQuery,
-          skip: !state?.wallet?.connection?.accounts[0],
+          skip: !state?.wallet?.connection?.accounts[1],
           variables: {
             where: {
-              writer: state?.wallet?.connection?.accounts[0],
+              creator: state?.wallet?.connection?.accounts[1],
               expiryTimestamp_lt: moment().unix(),
-              amount_gt: 0,
             },
           },
         },

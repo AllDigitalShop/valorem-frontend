@@ -1,39 +1,43 @@
 import gql from 'graphql-tag';
 
-export const activeOptions =  gql`
-  query activeOptions($where: Option_filter) {
+export const activeOptions = gql`
+  query options($where: Option_filter) {
     options(where: $where) {
-      id
-      underlyingAsset
+      creator {
+        id
+      }
+      exerciseAmount
+      exerciseAsset {
+        id
+      }
       exerciseTimestamp
       expiryTimestamp
-      exerciseAsset
+      id
       underlyingAmount
-      settlementSeed
-      exerciseAmount
-      writer
-      claimId
-      amount
-      exercisee
+      underlyingAsset {
+        id
+      }
     }
   }
 `;
 
 export const expiredOptions = gql`
-  query expiredOptions($where: Option_filter) {
+  query options($where: Option_filter) {
     options(where: $where) {
-      id
-      underlyingAsset
+      creator {
+        id
+      }
+      exerciseAmount
+      exerciseAsset {
+        id
+      }
       exerciseTimestamp
       expiryTimestamp
-      exerciseAsset
+      id
       underlyingAmount
-      settlementSeed
-      exerciseAmount
-      writer
-      claimId
-      amount
-      exercisee
+      underlyingAsset {
+        id
+      }
     }
   }
 `;
