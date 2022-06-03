@@ -11,7 +11,7 @@
 In order to run the app in development, the `npm run dev` command is best. This runs the Next.js development server for the app. From your terminal at the root of the project:
 
 ```javascript
-npm start
+npm run dev
 ```
 
 If you need to run a build of the site, the `npm run build` command is best. This runs the Next.js build for the app. From your terminal at the root of the project:
@@ -36,14 +36,17 @@ export const claims = gql`
     claims(where: $where) {
       id
       option
+      underlyingAmount
+      underlyingAsset {
+        id
+      }
+      writer {
+        id
+      }
+      claimed
+      exerciseAmount
       amountWritten
       amountExercised
-      claimed
-      redeemer
-      exerciseAsset
-      underlyingAsset
-      exerciseAmount
-      underlyingAmount
     }
   }
 `;

@@ -60,7 +60,7 @@ class Vault extends React.Component {
                 </div>
                 <header>
                   <h4>Options</h4>
-                  <p>Create and manage your options.</p>
+                  <p>Write and manage your options.</p>
                 </header>
               </li>
               <li className={path.includes('/vault/claims') ? 'active' : ''}>
@@ -70,7 +70,7 @@ class Vault extends React.Component {
                 </div>
                 <header>
                   <h4>Claims</h4>
-                  <p>Manage your claims.</p>
+                  <p>View and redeem your claims.</p>
                 </header>
               </li>
             </ul>

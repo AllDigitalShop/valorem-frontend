@@ -45,23 +45,21 @@ class Options extends React.Component {
       const query = {
         active: {
           query: activeOptionsQuery,
-          skip: !state?.wallet?.connection?.accounts[0],
+          skip: !state?.wallet?.connection?.accounts[1],
           variables: {
             where: {
-              writer: state?.wallet?.connection?.accounts[0],
+              creator: state?.wallet?.connection?.accounts[1],
               expiryTimestamp_gt: moment().unix(),
-              amount_gt: 0,
             },
           },
         },
         expired: {
           query: expiredOptionsQuery,
-          skip: !state?.wallet?.connection?.accounts[0],
+          skip: !state?.wallet?.connection?.accounts[1],
           variables: {
             where: {
-              writer: state?.wallet?.connection?.accounts[0],
+              creator: state?.wallet?.connection?.accounts[1],
               expiryTimestamp_lt: moment().unix(),
-              amount_gt: 0,
             },
           },
         },
@@ -106,7 +104,7 @@ class Options extends React.Component {
           <StyledOptions>
             <header>
               <h4>Options</h4>
-              <Button theme="purple-blue" onClick={() => Router.push('/vault/options/new')}>New Option Chain</Button>
+              <Button theme="purple-blue" onClick={() => Router.push('/vault/options/new')}>Write Options</Button>
             </header>
             <div className="tabs">
               <ul>
@@ -118,12 +116,12 @@ class Options extends React.Component {
             {!loading && options?.length === 0 && (
               <BlankState
                 title={{
-                  active: 'No active options yet.',
-                  expired: 'No expired options yet.',
+                  active: 'You aren\'t holding any active options.',
+                  expired: 'You aren\'t holding any expired options.',
                 }[list]}
                 subtitle={{
-                  active: 'To write a new option, click the "Write New Option" button above.',
-                  expired: 'Once options you\'ve written have expired, they will display here.',
+                  active: 'To write a new option, click the "Write Option" button above.',
+                  expired: 'Once options you\'ve hold have expired, they will display here.',
                 }[list]}
               />
             )}

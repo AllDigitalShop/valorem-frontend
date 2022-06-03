@@ -27,10 +27,10 @@ class Claims extends React.Component {
       const state = store.getState();
       const { data } = await graphql.query({
         query: claimsQuery,
-        skip: !state?.wallet?.connection?.accounts[0],
+        skip: !state?.wallet?.connection?.accounts[1],
         variables: {
           where: {
-            redeemer: state?.wallet?.connection?.accounts[0],
+            owner: state?.wallet?.connection?.accounts[1],
           },
         },
       });
@@ -49,6 +49,8 @@ class Claims extends React.Component {
 
     console.log({ loading, claims });
 
+    // TODO(Collateral claim/redeem)
+    // TODO(View option detail)
     return (
       <Vault>
         <StyledClaims>
@@ -58,8 +60,8 @@ class Claims extends React.Component {
           {loading && <Loader />}
           {!loading && claims?.length === 0 && (
             <BlankState
-              title="No claims yet."
-              subtitle="Once you submit an option claim, it will show here."
+              title="No claims found."
+              subtitle="Once you hold claims NFTs, they will show here."
             />
           )}
           {!loading && claims?.length > 0 && (
@@ -68,21 +70,17 @@ class Claims extends React.Component {
                 <table className="table">
                   <thead>
                     <tr>
-                      <th className="text-center">Option</th>
-                      <th className="text-center">Options Written</th>
-                      <th className="text-center">Underlying Asset</th>
-                      <th className="text-center"></th>
+                      <th className="text-center">Option Details</th>
+                      <th className="text-center">Contracts Written</th>
+                      <th className="text-center">Claim Collateral</th>
                     </tr>
                   </thead>
                   <tbody>
                     {claims?.map((item, index) => {
                       return (
                         <tr key={`claim-${item}-${index}`}>
-                          <td className="text-center"><Link href={`/vault/options?option=abc123`}>View Option</Link></td>
-                          <td className="text-center">1000</td>
-                          <td className="text-center">
-                            Underlying
-                          </td>
+                          <td className="text-center"><Link href={`/vault/options?option=${item?.option}`}>View Option</Link></td>
+                          <td className="text-center">{item?.amountWritten || 0}</td>
                           <td className="text-center">
                             <Button disabled={index / 1 === 0} theme="purple-blue">{ index / 1 === 0 ? 'Claimed' : 'Claim'}</Button>
                           </td>

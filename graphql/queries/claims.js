@@ -5,12 +5,24 @@ export const claims = gql`
     claims(where: $where) {
       id
       option
+      owner {
+        id
+      }
+      writer {
+        id
+      }
       amountWritten
       amountExercised
       claimed
-      redeemer
-      exerciseAsset
-      underlyingAsset
+      claimant {
+        id
+      }
+      exerciseAsset {
+        id
+      }
+      underlyingAsset {
+        id
+      }
       exerciseAmount
       underlyingAmount
     }
