@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import React from 'react';
+import { connect } from 'react-redux';
 import Link from 'next/link';
 import Button from '../../../components/button';
 import Vault from '../../../layouts/vault';
@@ -27,12 +28,12 @@ class Claims extends React.Component {
       const state = store.getState();
       const { data } = await graphql.query({
         query: claimsQuery,
-        skip: !state?.wallet?.connection?.accounts[1],
-        // variables: {
-        //   account: ,
-        // },
+        skip: !state?.wallet?.connection?.accounts[0],
+        variables: {
+          account: state?.wallet?.connection?.accounts[0].toLowerCase()
+        },
       });
-      const claims = data?.account.ERC1155balances.filter(item => item.token.type === 2)
+      const claims = data?.account?.ERC1155balances.filter(item => item.token.type === 2)
       const sanitizedData = unfreezeApolloCacheValue(claims || []);
   
       this.setState({
@@ -100,4 +101,8 @@ Claims.propTypes = {
   // prop: PropTypes.string.isRequired,
 };
 
-export default Claims;
+export default connect((state) => {
+  return state;
+})(Claims);
+
+
