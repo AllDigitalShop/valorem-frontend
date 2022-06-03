@@ -28,14 +28,12 @@ class Claims extends React.Component {
       const { data } = await graphql.query({
         query: claimsQuery,
         skip: !state?.wallet?.connection?.accounts[1],
-        variables: {
-          where: {
-            owner: state?.wallet?.connection?.accounts[1],
-          },
-        },
+        // variables: {
+        //   account: ,
+        // },
       });
-      console.log(data);
-      const sanitizedData = unfreezeApolloCacheValue(data?.claims || []);
+      const claims = data?.account.ERC1155balances.filter(item => item.token.type === 2)
+      const sanitizedData = unfreezeApolloCacheValue(claims || []);
   
       this.setState({
         loading: false,
@@ -80,9 +78,9 @@ class Claims extends React.Component {
                       return (
                         <tr key={`claim-${item}-${index}`}>
                           <td className="text-center"><Link href={`/vault/options?option=${item?.option}`}>View Option</Link></td>
-                          <td className="text-center">{item?.amountWritten || 0}</td>
+                          <td className="text-center">{item?.token?.claim?.amountWritten || 0}</td>
                           <td className="text-center">
-                            <Button disabled={index / 1 === 0} theme="purple-blue">{ index / 1 === 0 ? 'Claimed' : 'Claim'}</Button>
+                            <Button disabled={item?.token?.claim?.claimed} theme="purple-blue">{ item?.token?.claim?.claimed ? 'Claimed' : 'Claim'}</Button>
                           </td>
                         </tr>
                       );
